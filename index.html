@@ -192,16 +192,6 @@
         </li>
       
         
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
-            
-            About
-          </a>
-        </li>
-      
-        
         <li class="menu-item menu-item-tags">
           <a href="/tags/" rel="section">
             
@@ -212,52 +202,12 @@
         </li>
       
         
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
-            
-            Categories
-          </a>
-        </li>
-      
-        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             Archives
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-schedule">
-          <a href="/schedule/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
-            
-            Schedule
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-sitemap">
-          <a href="/sitemap.xml" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>
-            
-            Sitemap
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-commonweal">
-          <a href="/404/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>
-            
-            Commonweal 404
           </a>
         </li>
       
@@ -366,7 +316,7 @@
         
           
             <p>00X<br>最近看了一下bash漏洞，作为一个远程代码执行漏洞，通过学习发现确实存在这个漏洞话可以直接被反弹shell到攻击端，关于bash远程代码执行漏洞我们会在另一片文章中讲，因为对于fantanshell一只处于一种不清楚远离的状态，于是去一些大佬的博客学习了一下，谈一谈自己的理解和总结。<br>文件描述符与重定向<br>首先Linux中的文件描述符，在linux启动后会默认的打开三个文件描述符，分别是<br>标准输入standard input 0 （默认设备键盘）<br>标准输出standard output 1（默认设备显示器）<br>错误输出：error output 2（默认设备显示器）<br>0，1，2，并且所有的文件输入输出都是由该进程所有打开的文件描述符控制的，在linux中一切皆文件，因此他们的输入输出也是由文件描述符控制。<br>一条命令执行以前先会按照默认的情况进行绑定（也就是上面所说的 0,1,2），如果我们有时候需要让输出不显示在显示器上，而是输出到文件或者其他设备，那我们就需要重定向。<br>重定向的基础是<br>输入重定向&lt;<br>输出重定向&gt;<br>1.bash 在执行一条指令的时候，首先会检查命令中存不存在重定向的符号，如果存在那么首先将文件描述符重定向（之前说过了，输入输出操作都是依赖文件描述符实现的，重定向输入输出本质上就是重定向文件描述符），然后在把重定向去掉，执行指令<br>2.如果指令中存在多个重定向，那么不要随便改变顺序，因为重定向是从左向右解析的，改变顺序可能会带来完全不同的结果<br>3.&lt; 是对标准输入 0 重定向 ，&gt; 是对标准输出 1 重定向<br>4.再强调一下，重定向就是针对文件描述符的操作</p>
-<p>1.输入重定向<br>格式： [n]&lt; word （注意[n]与&lt;之间没有空格）<br>说明：将文件描述符 n 重定向到 word 指代的文件（以只读方式打开）,如果n省略就是0（标准输入）<br>在这里通俗点说一下我的理解，原本文件描述符中的标准输入符是默认设备为键盘，所以我们要读取的内容就应该是在通过键盘去输入，而这个符号 &lt; 标准输入重定向，可以将输入的设备从键盘改成文件，例如<br>图片: <a href="https://uploader.shimo.im/f/vlVhrnVbbMUB9dil.png" target="_blank" rel="noopener">https://uploader.shimo.im/f/vlVhrnVbbMUB9dil.png</a><br>解析器解析到 “&lt;” 以后会先处理重定向，将标准输入重定向到flie.txt，之后cat再从标准输入读取指令的时候，由于标准输入已经重定向到了file ，于是cat就从file中读取指令了<br>同样的，标准输出流也是一样的，<br>2.输出重定向<br>格式：   [n]&gt; word<br>说明： 将文件描述符 n 重定向到word 指代的文件（以写的方式打开），如果n 省略则默认就是 1（标准输出）<br>这里我的理解也是这样的，讲一个原本是标准输出到显示器的内容重定向到目标文件，将输出到文件中。<br>3.标准输出与标准错误输出重定向<br>格式：&amp;&gt; word 或&gt;&amp; word<br>说明:将标准输出与标准错误输出都定向到word代表的文件（以写的方式打开），两种格式意义完全相同，这种格式完全等价于 &gt; word 2&gt;&amp;1（这里的&amp;是为了区分文件名1的文件和文件描述符1，2&gt;&amp;1是将错误输出复制到标准输出）<br>图片: <a href="https://uploader.shimo.im/f/Fu0S1SiymzQEfKM1.png" target="_blank" rel="noopener">https://uploader.shimo.im/f/Fu0S1SiymzQEfKM1.png</a><br>4.文件描述符的复制<br>格式： [n]&lt;&amp;[m] / [n]&gt;&amp;[m] (这里所有字符之间不要有空格)</p>
+<p>1.输入重定向<br>格式： [n]&lt; word （注意[n]与&lt;之间没有空格）<br>说明：将文件描述符 n 重定向到 word 指代的文件（以只读方式打开）,如果n省略就是0（标准输入）<br>在这里通俗点说一下我的理解，原本文件描述符中的标准输入符是默认设备为键盘，所以我们要读取的内容就应该是在通过键盘去输入，而这个符号 &lt; 标准输入重定向，可以将输入的设备从键盘改成文件，例如<br>&lt;img src=”img/1.png&gt;<br>解析器解析到 “&lt;” 以后会先处理重定向，将标准输入重定向到flie.txt，之后cat再从标准输入读取指令的时候，由于标准输入已经重定向到了file ，于是cat就从file中读取指令了<br>同样的，标准输出流也是一样的，<br>2.输出重定向<br>格式：   [n]&gt; word<br>说明： 将文件描述符 n 重定向到word 指代的文件（以写的方式打开），如果n 省略则默认就是 1（标准输出）<br>这里我的理解也是这样的，讲一个原本是标准输出到显示器的内容重定向到目标文件，将输出到文件中。<br>3.标准输出与标准错误输出重定向<br>格式：&amp;&gt; word 或&gt;&amp; word<br>说明:将标准输出与标准错误输出都定向到word代表的文件（以写的方式打开），两种格式意义完全相同，这种格式完全等价于 &gt; word 2&gt;&amp;1（这里的&amp;是为了区分文件名1的文件和文件描述符1，2&gt;&amp;1是将错误输出复制到标准输出）<br>图片: <a href="https://uploader.shimo.im/f/Fu0S1SiymzQEfKM1.png" target="_blank" rel="noopener">https://uploader.shimo.im/f/Fu0S1SiymzQEfKM1.png</a><br>4.文件描述符的复制<br>格式： [n]&lt;&amp;[m] / [n]&gt;&amp;[m] (这里所有字符之间不要有空格)</p>
 <p>1）这里两个都是将文件描述符 n 复制到 m ，两者的区别是，前者是以只读的形式打开，后者是以写的形式打开<br>因此 0&lt;&amp;1 和 0&gt;&amp;1 是完全等价的（读/写方式打开对其没有任何影响）<br>2）这里的&amp; 目的是为了区分数字名字的文件和文件描述符，如果没有&amp; 系统会认为是将文件描述符重定向到了一个数字作为文件名的文件，而不是一个文件描述符。<br>上面提到的2&gt;&amp;1就是一个典型的用写的形式打开的将文件符2（标准错误输出）复制到1（标准输出）<br>重点：<br>之前我们说过，重定向符号的顺序不能随便换，因为系统是从左到右执行的，我们下面就举一个例子</p>
 <p>2&gt;&amp;1 &gt;file<br>首先解析器解释到2&gt;&amp;1 就是即将标准错误输出复制到标准输出，然后再解释&gt;,将标准输出输出到file。<br>图片: <a href="https://uploader.shimo.im/f/d4916ezqUPgu4AaF.png" target="_blank" rel="noopener">https://uploader.shimo.im/f/d4916ezqUPgu4AaF.png</a><br>这里不难看到，这个执行只是吧标准输出输出到了文件中，并没有把标准错误输出写入文件中，所以，这个顺序是很重要的。第一步把标准错误输出复制到标准输出不会影响后面的只将标准输出重定向到文件中。<br>5.exec 绑定重定向格式：<br>exec [n] &lt;/&gt; file/[n]<br>在上面讲的输入，输出重定向 将输入，输出绑定文件或设备后。只对当前那条指令是有效的。如果需要在绑定之后，接下来的所有命令都支持的话。就需要用exec命令<br>这里有点不是很懂，就多找了几个博客学习了一下，</p>
 <p>这里使用前先将标准输入保存到文件描述符6，这里说明下，文件描述符默认会打开0,1,2 还可以使用自定义描述符 。然后对标准输出绑定到文件，接下来所有输出都会发生到文件。 使用完后，恢复标准的输出，关闭打开文件描述符6。<br>这样的实际例子就很好地解释了这个地方的问题。<br>还有一个复杂一点的实利</p>
